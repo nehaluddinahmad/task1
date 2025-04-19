@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jane Doe | Web Developer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="sanvi.js">
+<link rel="stylesheet" href="sanvi.css">
+</head>
+<body>
+<!-- Preloader -->
+<div class="preloader">
+    <div class="loader"></div>
+</div>
+
+<!-- Header -->
+<header>
+    <nav class="container">
+        <div class="logo">Jane <span>Doe</span></div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#tasks">Tasks</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero fade-in" id="home">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Welcome to My Portfolio</h1>
+            <p>I'm a passionate web developer creating modern, responsive websites.</p>
+            <button class="cta-button" onclick="showWelcome()">Say Hello!</button>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="section fade-in" id="about">
+    <div class="container">
+        <div class="section-title">
+            <h2>About Me</h2>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Hi, I'm Jane Doe</h3>
+                <p>I specialize in crafting user-friendly websites using HTML, CSS, and JavaScript. With a focus on clean design and seamless functionality, I bring ideas to life on the web.</p>
+                <p>Explore my task manager below or get in touch to collaborate!</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1350&q=80" alt="Jane Doe">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- To-Do List Section -->
+<section class="section fade-in" id="tasks">
+    <div class="container">
+        <div class="section-title">
+            <h2>Task Manager</h2>
+        </div>
+        <div class="todo-container">
+            <div class="todo-input">
+                <input type="text" id="todo-input" placeholder="Add a new task...">
+                <button class="cta-button" id="add-btn">Add</button>
+            </div>
+            <ul class="todo-list" id="todo-list"></ul>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section fade-in" id="contact">
+    <div class="container">
+        <div class="section-title">
+            <h2>Contact Me</h2>
+        </div>
+        <div class="contact-form">
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control" required>
+                    <div class="error" id="name-error">Please enter your name</div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                    <div class="error" id="email-error">Please enter a valid email</div>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" class="form-control" required></textarea>
+                    <div class="error" id="message-error">Please enter your message</div>
+                </div>
+                <button type="submit" class="cta-button">Send Message</button>
+                <div class="form-message" id="form-message"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="fade-in">
+    <div class="container">
+        <div class="social-links">
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>© 2025 Jane Doe. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Preloader
+    window.addEventListener('load', () => {
+        const preloader = document.querySelector('.preloader');
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+        }, 1000);
+    });
+
+    // Mobile Navigation
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+            navLinks.classList.remove('active');
+        });
+    });
+
+    // Scroll Animations
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    fadeElements.forEach(element => observer.observe(element));
+
+    // Welcome Alert
+    function showWelcome() {
+        alert('Welcome to my portfolio! Thanks for visiting! 🎉');
+    }
+
+    // To-Do List
+    const todoInput = document.getElementById('todo-input');
+    const addBtn = document.getElementById('add-btn');
+    const todoList = document.getElementById('todo-list');
+
+    // Load tasks from localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+        const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        tasks.forEach(task => addTask(task));
+    });
+
+    addBtn.addEventListener('click', () => addTask());
+    todoInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addTask();
+    });
+
+    function addTask(text = todoInput.value.trim()) {
+        if (text) {
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+            li.innerHTML = `
+                <span>${text}</span>
+                <button><i class="fas fa-trash"></i></button>
+            `;
+            todoList.appendChild(li);
+            todoInput.value = '';
+
+            // Save to localStorage
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            tasks.push(text);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // Delete task
+            li.querySelector('button').addEventListener('click', () => {
+                li.remove();
+                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+                const updatedTasks = tasks.filter(task => task !== text);
+                localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+            });
+        }
+    }
+
+    // Form Validation
+    const contactForm = document.getElementById('contactForm');
+    const formMessage = document.getElementById('form-message');
+
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let isValid = true;
+
+        const name = document.getElementById('name');
+        const nameError = document.getElementById('name-error');
+        if (!name.value.trim()) {
+            nameError.style.display = 'block';
+            isValid = false;
+        } else {
+            nameError.style.display = 'none';
+        }
+
+        const email = document.getElementById('email');
+        const emailError = document.getElementById('email-error');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email.value.trim()) {
+            emailError.textContent = 'Please enter your email';
+            emailError.style.display = 'block';
+            isValid = false;
+        } else if (!emailRegex.test(email.value)) {
+            emailError.textContent = 'Please enter a valid email';
+            emailError.style.display = 'block';
+            isValid = false;
+        } else {
+            emailError.style.display = 'none';
+        }
+
+        const message = document.getElementById('message');
+        const messageError = document.getElementById('message-error');
+        if (!message.value.trim()) {
+            messageError.style.display = 'block';
+            isValid = false;
+        } else {
+            messageError.style.display = 'none';
+        }
+
+        if (isValid) {
+            formMessage.className = 'form-message success';
+            formMessage.textContent = 'Message sent successfully!';
+            formMessage.style.display = 'block';
+            contactForm.reset();
+            setTimeout(() => {
+                formMessage.style.display = 'none';
+            }, 3000);
+        }
+    });
+
+    // Real-time validation
+    document.getElementById('name').addEventListener('blur', function() {
+        document.getElementById('name-error').style.display = this.value.trim() ? 'none' : 'block';
+    });
+
+    document.getElementById('email').addEventListener('blur', function() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailError = document.getElementById('email-error');
+        if (!this.value.trim()) {
+            emailError.textContent = 'Please enter your email';
+            emailError.style.display = 'block';
+        } else if (!emailRegex.test(this.value)) {
+            emailError.textContent = 'Please enter a valid email';
+            emailError.style.display = 'block';
+        } else {
+            emailError.style.display = 'none';
+        }
+    });
+
+    document.getElementById('message').addEventListener('blur', function() {
+        document.getElementById('message-error').style.display = this.value.trim() ? 'none' : 'block';
+    });
+</script>
+</body>
+</html>
